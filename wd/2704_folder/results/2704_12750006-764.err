@@ -1,0 +1,47 @@
+Error in library(dplyrExtras) : there is no package called ‘dplyrExtras’
+Error in library(dtplyr) : there is no package called ‘dtplyr’
+Error in library(lubridate) : there is no package called ‘lubridate’
+Error in library(forcats) : there is no package called ‘forcats’
+
+Attaching package: ‘purrr’
+
+The following object is masked from ‘package:data.table’:
+
+    transpose
+
+Error in library(readr) : there is no package called ‘readr’
+Error in library(tidyr) : there is no package called ‘tidyr’
+Error in library(tidyverse) : there is no package called ‘tidyverse’
+Loading required package: cOde
+
+Attaching package: ‘dMod’
+
+The following objects are masked from ‘package:stats’:
+
+    optimize, profile, vcov
+
+
+Attaching package: ‘dplyr’
+
+The following object is masked from ‘package:dMod’:
+
+    combine
+
+The following objects are masked from ‘package:data.table’:
+
+    between, first, last
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+Error in library(tidyverse) : there is no package called ‘tidyverse’
+Error in check.objfun.output(out, minimize, d) : 
+  objfun returned value that is NA or NaN
+In addition: Warning message:
+In trust(objfun = function (..., fixed = NULL, deriv = TRUE, conditions = conditions12,  :
+  init above range

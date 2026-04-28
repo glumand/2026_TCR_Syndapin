@@ -1,0 +1,4 @@
+DLSODES- At T(=R1) and step size H(=R2), the error
+      test failed repeatedly or with ABS(H) = HMIN
+In above message, R1 = 589.097, R2 = 1.71576e-07
+ 
