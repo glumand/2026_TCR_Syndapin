@@ -1,0 +1,15 @@
+DLSODES- At T (=R1) and step size H (=R2), the    
+      corrector convergence failed repeatedly     
+      or with ABS(H) = HMIN   
+In above message, R1 = 0.571068, R2 = 1.06694e-07
+ 
+DLSODES- At T (=R1) and step size H (=R2), the    
+      corrector convergence failed repeatedly     
+      or with ABS(H) = HMIN   
+In above message, R1 = 52.7161, R2 = 3.81994e-08
+ 
+DLSODES- At T (=R1) and step size H (=R2), the    
+      corrector convergence failed repeatedly     
+      or with ABS(H) = HMIN   
+In above message, R1 = 282.799, R2 = 4.62644e-07
+ 

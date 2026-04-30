@@ -176,8 +176,8 @@ trafo <- NULL %>%
   define("x~0", x = "TCRL_Endo") %>%
   
   # set condition specific inits
-  insert("x~y", x="TCR_Endo", y="TCR_Endo_CTRL", conditionMatch = "0_shCTRL") %>% 
-  insert("x~y", x="TCR_ER", y="TCR_ER_CTRL", conditionMatch = "0_shCTRL") %>% 
+  # insert("x~y", x="TCR_Endo", y="TCR_Endo_CTRL", conditionMatch = "0_shCTRL") %>% 
+  # insert("x~y", x="TCR_ER", y="TCR_ER_CTRL", conditionMatch = "0_shCTRL") %>% 
   insert("x~y", x="TCR_Golgi_1", y="TCR_Golgi_1_CTRL", conditionMatch = "0_shCTRL") %>%
   insert("x~y", x="TCR_Golgi_2", y="TCR_Golgi_2_CTRL", conditionMatch = "0_shCTRL") %>%
   
@@ -192,15 +192,32 @@ trafo <- NULL %>%
   
   # second reduction init TCR_Endo to zero
   define("x~0", x = "TCR_Endo") %>%
-  define("x~0", x = "TCR_Endo_CTRL") %>%
+  # also uncomment the splitting for conitiond for that param
   
-  # third reduction remove offsets
-   define("x~0", x = "offset_Surface_full") %>%
-   define("x~0", x = "offset_Total") %>%
-   
-  # fourth reduction remove TCR_Surface init
-   define("x~0", x = "TCR_Surface") %>%
+  # 
+  # third reduction TCR_ER_CTRL, comment condition specific init from before
+  define("x~0", x="TCR_ER", conditionMatch = "0_shCTRL") %>% 
   
+  # remove last feedback via k_IM_1
+  define("x~0", x = "k_IM_1") %>%
+  
+  # set scale_Surface to 1
+  define("x~1", x = "scale_Surface") %>%
+  
+  # set TCR_Surface to 0
+  define("x~0", x = "TCR_Surface") %>%
+  
+  # set offset_Surface_full to 0
+  define("x~0", x = "offset_Surface_full") %>%
+  
+  # set k_P to 0
+  define("x~0", x = "k_P") %>%
+  
+  # set k_PM_4 to 0
+  define("x~0", x = "k_PM_4") %>%
+  
+  # set k_B to 0
+  define("x~0", x = "k_B") %>%
   
   {.}
 
@@ -276,8 +293,8 @@ if (.build) {
   loadDLL(x)
 }
 
-# mytimes <- c(seq(0, max(data$time) *1.1, 1))
-mytimes <- c(seq(0, 200, 1))
+mytimes <- c(seq(0, max(data$time) *1.1, 1))
+# mytimes <- c(seq(0, 200, 1))
 
 outerpars <- getParameters(p)
 ini <- structure(rep(-1, length(outerpars)), names = outerpars)
@@ -292,7 +309,7 @@ plotCombined(prd(mytimes, ini), datalist)
 
 
 obj_data <- normL2(datalist, g*x*p)
-obj_prior <- constraintL2(ini, sigma = 10, attr.name = "prior")
+obj_prior <- constraintL2(ini, sigma = 100, attr.name = "prior")
 obj_ssconstr <- normL2(ssCnstrDatalist, g*x*p, attr.name = "ssCnstr")
 
 obj <- Reduce("+", list(obj_data, obj_prior, obj_ssconstr))
@@ -398,14 +415,19 @@ outHelix_profs <- SendProfilesHelix(obj,
                                     algoControl = list(reoptimize = T),
                                     optControl = list(rinit = 0.1, rmax = 1, iterlim = 1e3, fterm = 1e-5, mterm = 1e-5))
 
+
 # outHelix_profs$check()
 profiles <- outHelix_profs$get()
 plotProfile(profiles, mode=="data")
-profile_plot <- plotProfile(profiles, mode==c("data", "ssCnstr"))
+profile_plot <- plotProfile(profiles, mode==c("data", "ssCnstr", "prior"))
 print(profile_plot)
 ggsave(paste0(.plotFolder, "/profiles.pdf"), plot = profile_plot, width = 15, height = 11)
 
 save(file = file.path(.resultsFolder, "profile_results.Rdata"), profiles)
-plotProfilesAndPaths(profiles, whichpars = c("scale_Surface", "scale_Total", "offset_Surface_full", "offset_Surface_sec", "offset_Total"))
-plotProfilesAndPaths(profiles, whichpars = c())
+plotProfilesAndPaths(profiles, whichpars = c("scale_Total", "offset_Surface_full", "offset_Surface_sec", "offset_Total"))
+plotProfilesAndPaths(profiles, whichpars = c("offset_Surface_sec", "k_D"))
 plotProfilesAndPaths(profiles, whichpars = c("TCR_ER", "TCR_ER_CTRL", "TCR_Surface", "TCRL_Surface"))
+plotProfilesAndPaths(profiles, whichpars = c("k_B", "k_IM_1"))
+plotProfilesAndPaths(profiles, whichpars = c("k_D", "k_D"))
+plotProfilesAndPaths(profiles, whichpars = c("k_PM_4", "k_I", "k_D", "k_B"))
+

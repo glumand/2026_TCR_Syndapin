@@ -2,7 +2,7 @@
 #include <R.h> 
  #include <math.h> 
 
-static double parms[19];
+static double parms[15];
 static double forc[0];
 static double cons[0];
 static double range[2];
@@ -15,27 +15,23 @@ static double range[2];
  #define k_IM_1 parms[1] 
  #define ligand parms[2] 
  #define k_B parms[3] 
- #define k_E parms[4] 
- #define k_IM_3 parms[5] 
- #define k_I parms[6] 
- #define k_PM_4 parms[7] 
- #define k_D parms[8] 
- #define k_I_lig parms[9] 
- #define k_PM_4_lig parms[10] 
- #define k_D_lig parms[11] 
- #define y0_0 parms[12] 
- #define y1_0 parms[13] 
- #define y2_0 parms[14] 
- #define y3_0 parms[15] 
- #define y4_0 parms[16] 
- #define y5_0 parms[17] 
- #define y6_0 parms[18] 
+ #define k_I parms[4] 
+ #define k_PM_4 parms[5] 
+ #define k_B_lig parms[6] 
+ #define k_I_lig parms[7] 
+ #define k_PM_4_lig parms[8] 
+ #define k_D parms[9] 
+ #define k_D_lig parms[10] 
+ #define y0_0 parms[11] 
+ #define y1_0 parms[12] 
+ #define y2_0 parms[13] 
+ #define y3_0 parms[14] 
 #define tmin range[0]
 #define tmax range[1]
 
 
 void x_initmod(void (* odeparms)(int *, double *)) {
-	 int N=19;
+	 int N=15;
 	 odeparms(&N, parms);
 }
 
@@ -49,13 +45,10 @@ void x_derivs (int *n, double *t, double *y, double *ydot, double *RPAR, int *IP
 
 	 double time = *t;
 
-	 ydot[0] = 1.0*(k_P/(1.0+k_IM_1*(y[3]+y[5]*ligand)))-1.0*(k_B*y[0])-1.0*(k_E*y[0]/(1.0+k_IM_3*(y[3]+y[5]*ligand)));
- 	 ydot[1] = 1.0*(k_E*y[0]/(1.0+k_IM_3*(y[3]+y[5]*ligand)))-1.0*(k_E*y[1]);
- 	 ydot[2] = 1.0*(k_E*y[1])-1.0*(k_E*y[2]);
- 	 ydot[3] = 1.0*(k_E*y[2])-1.0*(k_I*y[3])+1.0*(k_PM_4*y[4]);
- 	 ydot[4] = 1.0*(k_I*y[3])-1.0*(k_PM_4*y[4])-1.0*(k_D*y[4]);
- 	 ydot[5] = -1.0*(k_I_lig*y[5]*ligand)+1.0*(k_PM_4_lig*y[6]*ligand);
- 	 ydot[6] = 1.0*(k_I_lig*y[5]*ligand)-1.0*(k_PM_4_lig*y[6]*ligand)-1.0*(k_D_lig*y[6]*ligand);
+	 ydot[0] = 1.0*(k_P/(1.0+k_IM_1*(y[0]+y[1]*ligand)))-1.0*(k_B*y[0])-1.0*(k_I*y[0])+1.0*(k_PM_4*(y[0]+y[1]*ligand)*y[2]);
+ 	 ydot[1] = -1.0*(k_B_lig*y[1]*ligand)-1.0*(k_I_lig*y[1]*ligand)+1.0*(k_PM_4_lig*(y[1]+y[0])*y[3]*ligand);
+ 	 ydot[2] = 1.0*(k_I*y[0])-1.0*(k_PM_4*(y[0]+y[1]*ligand)*y[2])-1.0*(k_D*y[2]);
+ 	 ydot[3] = 1.0*(k_I_lig*y[1]*ligand)-1.0*(k_PM_4_lig*(y[1]+y[0])*y[3]*ligand)-1.0*(k_D_lig*y[3]*ligand);
 
 }
 
